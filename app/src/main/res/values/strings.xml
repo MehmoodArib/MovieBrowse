@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MovieBrowse</string>
+    <string name="name_movie">Movie Title</string>
+    <string name="movie_details">Movie Details</string>
+    <string name="plot">Plot Synopsis</string>
+    <string name="rating">User Rating</string>
+    <string name="release">Release Date</string>
+    <string name="pref_sort_order_label">Sort Order</string>
+    <string name="pref_sort_order_key">sortOrder</string>
+    <string name="trailer">Trailer</string>
+    <string name="top_rated_movies">Top rated movies</string>
+    <string name="upcoming_movies">Upcoming movies</string>
+    <string name="now_playing_movies">Now playing movies</string>
+    <string name="popular_movies">Popular movies</string>
+    <string name="favourite">Favourite</string>
+    <string name="sortByFileKey">Sort By File Key</string>
+    <string name="plot_synopsis">Plot Synopsis</string>
+    <string name="release_date">Release Date</string>
+    <string name="title">Title</string>
+    <string name="search">Search</string>
+</resources>
