@@ -33,4 +33,20 @@ public class MovieViewModel extends AndroidViewModel {
     public LiveData<Movie> getMovie(Integer id) {
         return favRepository.getMovie(id);
     }
+
+    public LiveData<NetworkResponse<List<Movie>>> getUpComingMovies(){
+        return favRepository.loadUpComingMovies();
+    }
+    public LiveData<NetworkResponse<List<Movie>>> getNowPlayingMovies(){
+        return favRepository.loadNowPlayingMovies();
+    }
+    public LiveData<NetworkResponse<List<Movie>>> getTopRatedMovies(){
+        return favRepository.loadTopRatedMovies();
+    }
+    public LiveData<NetworkResponse<List<Movie>>> getPopularMovies(){
+        return favRepository.loadPopularMovies();
+    }
+    public LiveData<NetworkResponse<List<Movie>>> searchMovie(String query){
+        return favRepository.loadMovieSearch(query);
+    }
 }

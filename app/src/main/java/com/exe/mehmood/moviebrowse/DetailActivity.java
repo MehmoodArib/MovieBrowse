@@ -59,33 +59,34 @@ public class DetailActivity extends AppCompatActivity {
         mUserRatingText = findViewById(R.id.userratingText);
 
         Intent intentThatStartedThisActivity = getIntent();
-        if (intentThatStartedThisActivity.hasExtra("movies")) {
+        if (intentThatStartedThisActivity != null)
+            if (intentThatStartedThisActivity.hasExtra(this.getResources().getString(R.string.movie))) {
 
-            movie = (Movie) getIntent().getSerializableExtra("movies");
+                movie = (Movie) getIntent().getSerializableExtra(this.getResources().getString(R.string.movie));
 
-            thumbnail = movie.getPosterPath();
-            movieName = movie.getOriginalTitle();
-            synopsis = movie.getOverview();
-            rating = movie.getVoteAverage().floatValue() / 2;
-            dateOfRelease = movie.getReleaseDate();
-            movie_id = movie.getId();
+                thumbnail = movie.getPosterPath();
+                movieName = movie.getOriginalTitle();
+                synopsis = movie.getOverview();
+                rating = movie.getVoteAverage().floatValue() / 2;
+                dateOfRelease = movie.getReleaseDate();
+                movie_id = movie.getId();
 
-            String poster = "https://image.tmdb.org/t/p/w500" + thumbnail;
+                String poster = "https://image.tmdb.org/t/p/w500" + thumbnail;
 
-            Glide.with(this)
-                    .load(poster)
-                    .placeholder(R.drawable.load)
-                    .into(mThumbNailImageView);
+                Glide.with(this)
+                        .load(poster)
+                        .placeholder(R.drawable.load)
+                        .into(mThumbNailImageView);
 
-            mNameOfMovieTextView.setText(movieName);
-            mPlotSynopsisTextView.setText(synopsis);
-            mUserRatingBar.setRating(rating);
-            mUserRatingText.setText(String.valueOf(rating));
-            mReleaseDate.setText(dateOfRelease);
+                mNameOfMovieTextView.setText(movieName);
+                mPlotSynopsisTextView.setText(synopsis);
+                mUserRatingBar.setRating(rating);
+                mUserRatingText.setText(String.valueOf(rating));
+                mReleaseDate.setText(dateOfRelease);
 
-        } else {
-            Toast.makeText(this, "No API Data", Toast.LENGTH_SHORT).show();
-        }
+            } else {
+                Toast.makeText(this, "No API Data", Toast.LENGTH_SHORT).show();
+            }
         initViews();
 
     }
@@ -117,7 +118,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     /**
-     * Initilize views
+     * Initialize views
      */
 
     private void initViews() {
@@ -127,6 +128,7 @@ public class DetailActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view1);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setAdapter(trailerAdapter);
         trailerAdapter.notifyDataSetChanged();
 
@@ -164,5 +166,6 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

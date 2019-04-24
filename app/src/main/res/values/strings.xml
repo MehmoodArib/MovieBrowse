@@ -13,9 +13,11 @@
     <string name="now_playing_movies">Now playing movies</string>
     <string name="popular_movies">Popular movies</string>
     <string name="favourite">Favourite</string>
-    <string name="sortByFileKey">Sort By File Key</string>
+    <string name="sortByFileKey">movies_preference</string>
     <string name="plot_synopsis">Plot Synopsis</string>
     <string name="release_date">Release Date</string>
     <string name="title">Title</string>
     <string name="search">Search</string>
+    <string name="undo_string">UNDO</string>
+    <string name="movie">movie</string>
 </resources>

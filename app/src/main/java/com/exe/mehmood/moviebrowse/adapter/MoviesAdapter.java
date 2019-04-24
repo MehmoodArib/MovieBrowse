@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
-    MovieViewModel movieViewModel;
+    private MovieViewModel movieViewModel;
     private AppCompatActivity mContext;
     private List<Movie> movieList;
 
@@ -104,7 +104,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                     int id = (int) favImageView.getTag();
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        Movie clickedMovie = movieList.get(pos);
+                        final Movie clickedMovie = movieList.get(pos);
 
                         if (id == R.drawable.ic_fav) {
 
@@ -114,8 +114,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
                             movieViewModel.insert(clickedMovie);
 
-                            Snackbar.make(view, "Added to Favorite",
-                                    Snackbar.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(view, "Added to Favorite",
+                                    Snackbar.LENGTH_SHORT);
+                            snackbar.setAction(R.string.undo_string, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    movieViewModel.deleteMovie(clickedMovie);
+                                }
+                            });
+                            snackbar.show();
+
 
                         } else {
 
@@ -123,8 +131,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                             favImageView.setTag(R.drawable.ic_fav);
                             favImageView.setImageResource(R.drawable.ic_fav);
                             movieViewModel.deleteMovie(clickedMovie);
-                            Snackbar.make(view, "Removed from Favorite",
-                                    Snackbar.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(view, "Removed from Favorite",
+                                    Snackbar.LENGTH_SHORT);
+                            snackbar.setAction(R.string.undo_string, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    movieViewModel.insert(clickedMovie);
+                                }
+                            });
+                            snackbar.show();
 
 
                         }
@@ -147,7 +162,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                     if (pos != RecyclerView.NO_POSITION) {
                         Movie clickedDataItem = movieList.get(pos);
                         Intent intent = new Intent(mContext, DetailActivity.class);
-                        intent.putExtra("movies", clickedDataItem);
+                        intent.putExtra(mContext.getResources().getString(R.string.movie), clickedDataItem);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
                         Toast.makeText(v.getContext(), "You clicked " + clickedDataItem.getOriginalTitle(), Toast.LENGTH_SHORT).show();
