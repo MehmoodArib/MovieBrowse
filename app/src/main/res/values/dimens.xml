@@ -15,4 +15,6 @@
     <dimen name="layout_margin_top2">10dp</dimen>
     <dimen name="padding_layout">16dp</dimen>
     <dimen name="icons_padding">4dp</dimen>
+    <dimen name="movie_type_tag_padding">3dp</dimen>
+    <dimen name="movie_type_tag_textSize">24sp</dimen>
 </resources>

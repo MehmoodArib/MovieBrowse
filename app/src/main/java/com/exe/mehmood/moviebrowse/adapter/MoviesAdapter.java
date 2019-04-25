@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.exe.mehmood.moviebrowse.DetailActivity;
+import com.exe.mehmood.moviebrowse.MainActivity;
 import com.exe.mehmood.moviebrowse.R;
 import com.exe.mehmood.moviebrowse.data.MovieViewModel;
 import com.exe.mehmood.moviebrowse.model.Movie;
@@ -38,6 +40,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         this.movieViewModel = ViewModelProviders.of(mContext).get(MovieViewModel.class);
 
     }
+
+
 
     @NonNull
     @Override
@@ -74,6 +78,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         Glide.with(mContext)
                 .load(poster)
                 .placeholder(R.drawable.load)
+                .apply(new RequestOptions().override(400, 400))
+                .centerCrop()
                 .into(viewHolder.thumbnail);
 
     }

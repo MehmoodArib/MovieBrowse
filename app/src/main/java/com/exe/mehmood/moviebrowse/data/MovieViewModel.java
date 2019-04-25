@@ -12,7 +12,6 @@ import androidx.lifecycle.LiveData;
 
 public class MovieViewModel extends AndroidViewModel {
     private FavRepository favRepository;
-
     public MovieViewModel(@NonNull Application application) {
         super(application);
         favRepository = new FavRepository(application);

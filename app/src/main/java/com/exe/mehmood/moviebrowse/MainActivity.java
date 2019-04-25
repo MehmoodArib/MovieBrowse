@@ -1,12 +1,10 @@
 package com.exe.mehmood.moviebrowse;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.exe.mehmood.moviebrowse.adapter.MoviesAdapter;
@@ -15,74 +13,54 @@ import com.exe.mehmood.moviebrowse.data.NetworkResponse;
 import com.exe.mehmood.moviebrowse.model.Movie;
 
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import static com.exe.mehmood.moviebrowse.SharedPreferencesUtility.Key.SORT_ORDER;
-
 /**
  * This is the Main Activity consisting of RecyclerView.
  * We store the sort-order in shared preference and according to the sort-order we load the values
  * in recycler view.
  */
 
-public class MainActivity extends AppCompatActivity implements Observer<NetworkResponse<List<Movie>>> {
-    public static final String LOG_TAG = MainActivity.class.getName();
+public class MainActivity extends AppCompatActivity {
     MovieViewModel movieViewModel;
-    private ProgressBar progressBar;
-    private RecyclerView mRecyclerView;
-    private MoviesAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private AppCompatActivity activity = MainActivity.this;
-
+    LinearLayout mLinearLayout;
+    private Menu menu;
+    private RecyclerView mRecyclerViewPopularMovies, mRecyclerViewTopRatedMovies, mRecyclerViewNowPlayingMovies,
+            mRecyclerViewFavouriteMovies, mRecyclerViewUpComingMovies;
+    private MoviesAdapter mMoviesAdapterPopularMovies, mMoviesAdapterTopRatedMovies, mMoviesAdapterNowPlayingMovies,
+            mMoviesAdapterFavouriteMovies, mMoviesAdapterUpComingMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-
         initViews();
     }
+
     /**
      * Initialize Views
      */
     private void initViews() {
-        String sortOrder = SharedPreferencesUtility.getInstance(this).getString(SORT_ORDER, getResources().getString(R.string.popular_movies));
-        setTitle(sortOrder);
-        mRecyclerView = findViewById(R.id.recycler_view);
-
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
-
-
-        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        } else {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-        }
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mSwipeRefreshLayout = findViewById(R.id.main_content);
-        mSwipeRefreshLayout.setEnabled(false);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                checkSortOrder();
-                Toast.makeText(MainActivity.this, "Movies Refreshed", Toast.LENGTH_SHORT).show();
-            }
-        });
-        checkSortOrder();
+        mRecyclerViewFavouriteMovies = findViewById(R.id.recycler_view_favouriteMovies);
+        mRecyclerViewUpComingMovies = findViewById(R.id.recycler_view_upComingMovies);
+        mRecyclerViewNowPlayingMovies = findViewById(R.id.recycler_view_nowPlayingMovies);
+        mRecyclerViewTopRatedMovies = findViewById(R.id.recycler_view_topRatedMovies);
+        mRecyclerViewPopularMovies = findViewById(R.id.recycler_view_popularMovies);
+        mLinearLayout = findViewById(R.id.main_content);
+        loadUpComingMovies();
+        loadFavouriteMovies();
+        loadNowPlayingMovies();
+        loadPopularMovies();
+        loadTopRatedMovies();
     }
 
     /**
@@ -90,182 +68,148 @@ public class MainActivity extends AppCompatActivity implements Observer<NetworkR
      */
 
     private void loadFavouriteMovies() {
-        setTitle("Favourite Movies");
         movieViewModel.getAllFavMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                //Here we have put this if condition because since favMovie data is coming from
-                // live data so when we are adding any value in fav database  this onchanged method is called
-                //and values in recycler view are changing to the favlist.
-                //which is not the required behaviour.
-                //so we have put the check condition.
-                String sortOrder = SharedPreferencesUtility.getInstance(MainActivity.this).getString(SORT_ORDER, getResources().getString(R.string.popular_movies));
-                if (Objects.equals(sortOrder, getResources().getString(R.string.favourite))) {
-                    Log.d(LOG_TAG, "On changed called " + sortOrder);
-                    mAdapter = new MoviesAdapter(MainActivity.this, movies);
-                    mRecyclerView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                }
+                mMoviesAdapterFavouriteMovies = new MoviesAdapter(MainActivity.this, movies);
+                mRecyclerViewFavouriteMovies.setAdapter(mMoviesAdapterFavouriteMovies);
+                mMoviesAdapterFavouriteMovies.notifyDataSetChanged();
+                mRecyclerViewFavouriteMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
             }
         });
-
-
     }
 
     /**
      * Load Popular Movies By making an Api call to tmdb.org.
      */
     private void loadPopularMovies() {
-        setTitle("Popular Movies");
-        mRecyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setEnabled(true);
-        movieViewModel.getPopularMovies().observe(this, this);
+        movieViewModel.getPopularMovies().observe(this, new Observer<NetworkResponse<List<Movie>>>() {
+            @Override
+            public void onChanged(NetworkResponse<List<Movie>> listNetworkResponse) {
+                switch (listNetworkResponse.getStatus()) {
+                    case SUCCESS:
+                        mMoviesAdapterPopularMovies = new MoviesAdapter(MainActivity.this, listNetworkResponse.getData());
+                        mRecyclerViewPopularMovies.setAdapter(mMoviesAdapterPopularMovies);
+                        mRecyclerViewPopularMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                        mRecyclerViewPopularMovies.smoothScrollToPosition(0);
+                        break;
+                    case LOADING:
+                        Toast.makeText(MainActivity.this, "Loading Favorite", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(MainActivity.this, listNetworkResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
+
     /**
      * Load TopRated Movies By making an Api call to tmdb.org.
      */
     private void loadTopRatedMovies() {
-        setTitle("Top Rated Movies");
-        mRecyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setEnabled(true);
-        movieViewModel.getTopRatedMovies().observe(this, this);
+        movieViewModel.getTopRatedMovies().observe(this, new Observer<NetworkResponse<List<Movie>>>() {
+            @Override
+            public void onChanged(NetworkResponse<List<Movie>> listNetworkResponse) {
+                switch (listNetworkResponse.getStatus()) {
+                    case SUCCESS:
+                        mMoviesAdapterTopRatedMovies = new MoviesAdapter(MainActivity.this, listNetworkResponse.getData());
+                        mRecyclerViewTopRatedMovies.setAdapter(mMoviesAdapterTopRatedMovies);
+                        mRecyclerViewTopRatedMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                        mRecyclerViewTopRatedMovies.smoothScrollToPosition(0);
+                        break;
+                    case LOADING:
+                        Toast.makeText(MainActivity.this, "Loading TopRated", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(MainActivity.this, listNetworkResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
+
     /**
      * Load NowPlaying Movies By making an Api call to tmdb.org.
      */
     private void loadNowPlayingMovies() {
-        setTitle("Now Playing Movies");
-        mRecyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setEnabled(true);
-        movieViewModel.getNowPlayingMovies().observe(this, this);
+        movieViewModel.getNowPlayingMovies().observe(this, new Observer<NetworkResponse<List<Movie>>>() {
+            @Override
+            public void onChanged(NetworkResponse<List<Movie>> listNetworkResponse) {
+                switch (listNetworkResponse.getStatus()) {
+                    case SUCCESS:
+                        mMoviesAdapterNowPlayingMovies = new MoviesAdapter(MainActivity.this, listNetworkResponse.getData());
+                        mRecyclerViewNowPlayingMovies.setAdapter(mMoviesAdapterNowPlayingMovies);
+                        mRecyclerViewNowPlayingMovies.smoothScrollToPosition(0);
+                        mRecyclerViewNowPlayingMovies.setLayoutManager(new GridLayoutManager(MainActivity.this, 1, RecyclerView.HORIZONTAL, false));
+
+                        break;
+                    case LOADING:
+                        Toast.makeText(MainActivity.this, "Loading NowPlaying", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(MainActivity.this, listNetworkResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
     /**
      * Load Upcoming Movies By making an Api call to tmdb.org.
      */
     void loadUpComingMovies() {
-        setTitle("UpComing Movies");
-        mRecyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setEnabled(true);
-        movieViewModel.getUpComingMovies().observe(this, this);
-    }
-
-    /**
-     *
-     * @param query  "is the string which we have to search for"
-     */
-    private void loadMovieSearch(String query) {
-        mRecyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setEnabled(true);
-        movieViewModel.searchMovie(query).observe(this, this);
+        movieViewModel.getUpComingMovies().observe(this, new Observer<NetworkResponse<List<Movie>>>() {
+            @Override
+            public void onChanged(NetworkResponse<List<Movie>> listNetworkResponse) {
+                switch (listNetworkResponse.getStatus()) {
+                    case SUCCESS:
+                        mMoviesAdapterUpComingMovies = new MoviesAdapter(MainActivity.this, listNetworkResponse.getData());
+                        mRecyclerViewUpComingMovies.setAdapter(mMoviesAdapterUpComingMovies);
+                        mRecyclerViewUpComingMovies.smoothScrollToPosition(0);
+                        mRecyclerViewUpComingMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                        break;
+                    case LOADING:
+                        Toast.makeText(MainActivity.this, "Upcoming Favorite", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(MainActivity.this, listNetworkResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        //searchView used for searching the movie.which is shown in toolbar.
-        MenuItem searchViewItem = menu.findItem(R.id.searchView);
-        final SearchView searchView = (SearchView) searchViewItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                loadMovieSearch(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 0) {
-                    loadMovieSearch(newText);
-                } else {
-                    checkSortOrder();
-                }
-                return true;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
+        this.menu = menu;
+        return true;
     }
-    /**
-     * Here we update the value of sort-order which is stored in shared preference
-     */
-    @Override
+
     public boolean onOptionsItemSelected(MenuItem item) {
-        SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.popular_movies));
         switch (item.getItemId()) {
-            case R.id.popular:
-                SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.popular_movies));
-                checkSortOrder();
-                return true;
-            case R.id.now_playing:
-                SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.now_playing_movies));
-                checkSortOrder();
-                return true;
-            case R.id.up_coming:
-                SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.upcoming_movies));
-                checkSortOrder();
-                return true;
-            case R.id.top_rated:
-                SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.top_rated_movies));
-                checkSortOrder();
-                return true;
-            case R.id.favourite:
-                SharedPreferencesUtility.getInstance(this).put(SORT_ORDER, getResources().getString(R.string.favourite));
-                checkSortOrder();
+            case R.id.search:
+                Fragment fragment = new SearchFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, fragment, "Tag");
+                transaction.addToBackStack("true");
+                mLinearLayout.setVisibility(View.GONE);
+                item.setVisible(false);
+                transaction.commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    /**
-     * This method check the value in sort-order and load the data accordingly in Recycler View
-     */
-    private void checkSortOrder() {
-        String sortOrder = SharedPreferencesUtility.getInstance(this).getString(SORT_ORDER, getResources().getString(R.string.popular_movies));
-        if (Objects.equals(sortOrder, getResources().getString(R.string.popular_movies))) {
-            loadPopularMovies();
-
-        } else if (Objects.equals(sortOrder, getResources().getString(R.string.favourite))) {
-            loadFavouriteMovies();
-
-        } else if (Objects.equals(sortOrder, getResources().getString(R.string.top_rated_movies))) {
-            loadTopRatedMovies();
-
-        } else if (Objects.equals(sortOrder, getResources().getString(R.string.upcoming_movies))) {
-            loadUpComingMovies();
-        } else if (Objects.equals(sortOrder, getResources().getString(R.string.now_playing_movies))) {
-            loadNowPlayingMovies();
-        }
+    @Override
+    public void onBackPressed() {
+        mLinearLayout.setVisibility(View.VISIBLE);
+        MenuItem item = menu.findItem(R.id.search);
+        item.setVisible(true);
+        super.onBackPressed();
     }
-
-    public void onChanged(NetworkResponse<List<Movie>> listNetworkResponse) {
-        switch (listNetworkResponse.getStatus()) {
-            case SUCCESS:
-                progressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mRecyclerView.setAdapter(new MoviesAdapter(MainActivity.this, listNetworkResponse.getData()));
-                mRecyclerView.smoothScrollToPosition(0);
-                if (mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-                break;
-            case LOADING:
-                mRecyclerView.setVisibility(View.GONE);
-                progressBar.setVisibility(View.VISIBLE);
-                break;
-            case ERROR:
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, listNetworkResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
 }
+
 
