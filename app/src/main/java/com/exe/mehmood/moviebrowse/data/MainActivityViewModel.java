@@ -2,6 +2,7 @@ package com.exe.mehmood.moviebrowse.data;
 
 import android.app.Application;
 
+import com.exe.mehmood.moviebrowse.MainActivity;
 import com.exe.mehmood.moviebrowse.model.Movie;
 
 import java.util.List;
@@ -10,42 +11,50 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-public class MovieViewModel extends AndroidViewModel {
-    private FavRepository favRepository;
-    public MovieViewModel(@NonNull Application application) {
+/***
+ * View Model of Main Activity.
+ */
+public class MainActivityViewModel extends AndroidViewModel {
+    private MainActivityRepository mainActivityRepository;
+
+    public MainActivityViewModel(@NonNull Application application) {
         super(application);
-        favRepository = new FavRepository(application);
+        mainActivityRepository = new MainActivityRepository(application);
     }
 
     public LiveData<List<Movie>> getAllFavMovies() {
-        return favRepository.getMovies();
+        return mainActivityRepository.getMovies();
     }
 
     public void deleteMovie(Movie movie) {
-        favRepository.deleteMovie(movie);
+        mainActivityRepository.deleteMovie(movie);
     }
 
     public void insert(Movie movie) {
-        favRepository.insertMovie(movie);
+        mainActivityRepository.insertMovie(movie);
     }
 
     public LiveData<Movie> getMovie(Integer id) {
-        return favRepository.getMovie(id);
+        return mainActivityRepository.getMovie(id);
     }
 
     public LiveData<NetworkResponse<List<Movie>>> getUpComingMovies(){
-        return favRepository.loadUpComingMovies();
+        return mainActivityRepository.loadUpComingMovies();
     }
+
     public LiveData<NetworkResponse<List<Movie>>> getNowPlayingMovies(){
-        return favRepository.loadNowPlayingMovies();
+        return mainActivityRepository.loadNowPlayingMovies();
     }
+
     public LiveData<NetworkResponse<List<Movie>>> getTopRatedMovies(){
-        return favRepository.loadTopRatedMovies();
+        return mainActivityRepository.loadTopRatedMovies();
     }
+
     public LiveData<NetworkResponse<List<Movie>>> getPopularMovies(){
-        return favRepository.loadPopularMovies();
+        return mainActivityRepository.loadPopularMovies();
     }
+
     public LiveData<NetworkResponse<List<Movie>>> searchMovie(String query){
-        return favRepository.loadMovieSearch(query);
+        return mainActivityRepository.loadMovieSearch(query);
     }
 }

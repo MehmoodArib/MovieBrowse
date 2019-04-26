@@ -12,9 +12,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.exe.mehmood.moviebrowse.DetailActivity;
-import com.exe.mehmood.moviebrowse.MainActivity;
 import com.exe.mehmood.moviebrowse.R;
-import com.exe.mehmood.moviebrowse.data.MovieViewModel;
+import com.exe.mehmood.moviebrowse.data.MainActivityViewModel;
 import com.exe.mehmood.moviebrowse.model.Movie;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,9 +26,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+/***
+ * Movie Adapter used with movie card in Main Activity.
+ */
+
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
-    private MovieViewModel movieViewModel;
+    private MainActivityViewModel mainActivityViewModel;
     private AppCompatActivity mContext;
     private List<Movie> movieList;
 
@@ -37,10 +41,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     public MoviesAdapter(AppCompatActivity mContext, List<Movie> movieList) {
         this.mContext = mContext;
         this.movieList = movieList;
-        this.movieViewModel = ViewModelProviders.of(mContext).get(MovieViewModel.class);
+        this.mainActivityViewModel = ViewModelProviders.of(mContext).get(MainActivityViewModel.class);
 
     }
-
 
 
     @NonNull
@@ -59,7 +62,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         viewHolder.rating.setRating(Float.parseFloat(vote));
         viewHolder.userratingText.setText(vote);
 
-        movieViewModel.getMovie(movieList.get(i).getId()).observe(mContext, new Observer<Movie>() {
+        mainActivityViewModel.getMovie(movieList.get(i).getId()).observe(mContext, new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie movie) {
                 if (movie != null) {
@@ -91,7 +94,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title, userratingText;
-        ImageView thumbnail, favImageView, shareImageView;
+        ImageView thumbnail, favImageView;
         RatingBar rating;
 
         MyViewHolder(final View view) {
@@ -100,7 +103,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             rating = view.findViewById(R.id.userrating);
             thumbnail = view.findViewById(R.id.thumbnail);
             favImageView = view.findViewById(R.id.imageViewFav);
-            shareImageView = view.findViewById(R.id.imageViewShare);
             userratingText = view.findViewById(R.id.userratingText);
 
 
@@ -118,14 +120,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                             favImageView.setTag(R.drawable.ic_fav2);
                             favImageView.setImageResource(R.drawable.ic_fav2);
 
-                            movieViewModel.insert(clickedMovie);
+                            mainActivityViewModel.insert(clickedMovie);
 
                             Snackbar snackbar = Snackbar.make(view, "Added to Favorite",
                                     Snackbar.LENGTH_SHORT);
                             snackbar.setAction(R.string.undo_string, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    movieViewModel.deleteMovie(clickedMovie);
+                                    mainActivityViewModel.deleteMovie(clickedMovie);
                                 }
                             });
                             snackbar.show();
@@ -136,13 +138,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
                             favImageView.setTag(R.drawable.ic_fav);
                             favImageView.setImageResource(R.drawable.ic_fav);
-                            movieViewModel.deleteMovie(clickedMovie);
+                            mainActivityViewModel.deleteMovie(clickedMovie);
                             Snackbar snackbar = Snackbar.make(view, "Removed from Favorite",
                                     Snackbar.LENGTH_SHORT);
                             snackbar.setAction(R.string.undo_string, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    movieViewModel.insert(clickedMovie);
+                                    mainActivityViewModel.insert(clickedMovie);
                                 }
                             });
                             snackbar.show();
@@ -150,14 +152,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
                         }
                     }
-                }
-            });
-
-            shareImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "You clicked share", Toast.LENGTH_SHORT).show();
-
                 }
             });
 

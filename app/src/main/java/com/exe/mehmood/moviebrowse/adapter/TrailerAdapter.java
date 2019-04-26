@@ -18,6 +18,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/***
+ * Trailer Adapter used to show the trailer's in Detailed Activity.
+ */
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.MyViewHolder> {
 
     private Context mContext;

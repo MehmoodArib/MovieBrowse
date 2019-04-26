@@ -6,15 +6,17 @@
     android:orientation="vertical"
     tools:context="com.exe.mehmood.moviebrowse.SearchFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
+    <EditText
+        android:id="@+id/text_input_Edit_Text"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/ic_search_black"
+        android:hint="@string/search_here_for_movie_person_show"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_SearchMovies"

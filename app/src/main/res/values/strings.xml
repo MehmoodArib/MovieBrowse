@@ -23,4 +23,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="unable_to_fetch_data">Unable to fetch Data</string>
+    <string name="search_here_for_movie_person_show">Search here for movie/person/Show</string>
+    <string name="add_to_favourite">Add to Favourite</string>
 </resources>

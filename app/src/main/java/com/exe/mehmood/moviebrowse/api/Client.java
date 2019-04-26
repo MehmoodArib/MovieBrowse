@@ -3,6 +3,9 @@ package com.exe.mehmood.moviebrowse.api;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/***
+ * Retrofit is the client used to load Api
+ */
 
 public class Client {
 

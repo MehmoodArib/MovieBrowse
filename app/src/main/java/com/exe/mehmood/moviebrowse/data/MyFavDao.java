@@ -10,6 +10,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+/***
+ * Room Dao to store favourite movies to local Datbase.
+ */
 @Dao
 public interface MyFavDao {
     @Insert

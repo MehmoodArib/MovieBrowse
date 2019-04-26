@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="wrap_content"
@@ -12,21 +12,24 @@
     android:elevation="10dp"
     card_view:cardCornerRadius="@dimen/card_movie_radius">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
 
         <ImageView
+            android:contentDescription="ThumbNail"
             android:id="@+id/thumbnail"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/youtube"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/gl80"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -34,84 +37,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:paddingLeft="@dimen/movie_title_padding"
-            android:paddingTop="@dimen/movie_title_padding"
-            android:paddingRight="@dimen/movie_title_padding"
-            android:text="Jai Ho"
+            android:layout_marginTop="8dp"
             android:textColor="@color/movie_title"
             android:textSize="@dimen/movie_title"
-            app:layout_constraintBottom_toTopOf="@+id/userrating"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.095"
+            android:text="@string/app_name"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@id/gl80" />
 
 
         <RatingBar
             android:id="@+id/userrating"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_margin="10dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:isIndicator="true"
             android:numStars="5"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/user_rating"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/userratingText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/userratingText"
-            app:layout_constraintVertical_bias="0.933" />
+            app:layout_constraintLeft_toLeftOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <TextView
             android:id="@+id/userratingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_marginBottom="8dp"
-            android:layout_toEndOf="@+id/userrating"
+            android:layout_marginStart="8dp"
             android:text="2.5"
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewShare"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/userrating" />
+            app:layout_constraintBottom_toBottomOf="@+id/userrating"
+            app:layout_constraintStart_toEndOf="@+id/userrating"
+            app:layout_constraintTop_toTopOf="@+id/userrating" />
+
 
         <ImageView
-            android:id="@+id/imageViewShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
-            android:padding="@dimen/icons_padding"
-            android:src="@drawable/ic_share"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewFav"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/userratingText" />
-
-        <ImageView
+            android:contentDescription="@string/add_to_favourite"
             android:id="@+id/imageViewFav"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_fav"
+            app:layout_constraintBottom_toBottomOf="@id/userrating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/userratingText"
+            app:layout_constraintTop_toTopOf="@id/userrating" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl80"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
-            android:layout_toStartOf="@+id/imageViewShare"
-            android:padding="@dimen/icons_padding"
-            android:src="@drawable/ic_fav"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageViewShare" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.exe.mehmood.moviebrowse.BuildConfig;
+import com.exe.mehmood.moviebrowse.MainActivity;
 import com.exe.mehmood.moviebrowse.api.Client;
 import com.exe.mehmood.moviebrowse.api.Service;
 import com.exe.mehmood.moviebrowse.model.Movie;
@@ -21,13 +22,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class FavRepository {
+/***
+ * Repository Containing All methods of local database and Api.
+ */
+class MainActivityRepository {
     private String DB_NAME = "db_task";
     private LiveData<List<Movie>> movies;
 
 
     private FavDataBase favDataBase;
-    FavRepository(Context context) {
+    MainActivityRepository(Context context) {
         favDataBase = Room.databaseBuilder(context, FavDataBase.class, DB_NAME).build();
         movies = favDataBase.myFavDao().fetchAllFavMovie();
     }
