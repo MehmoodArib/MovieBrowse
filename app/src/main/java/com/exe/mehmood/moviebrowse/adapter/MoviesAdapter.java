@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.exe.mehmood.moviebrowse.DetailActivity;
 import com.exe.mehmood.moviebrowse.R;
-import com.exe.mehmood.moviebrowse.data.MainActivityViewModel;
+import com.exe.mehmood.moviebrowse.data.ViewModels.MainActivityViewModel;
 import com.exe.mehmood.moviebrowse.model.Movie;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -60,7 +60,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         viewHolder.title.setText(movieList.get(i).getOriginalTitle());
         String vote = Double.toString(movieList.get(i).getVoteAverage() / 2);
         viewHolder.rating.setRating(Float.parseFloat(vote));
-        viewHolder.userratingText.setText(vote);
+        viewHolder.userRatingText.setText(vote);
 
         mainActivityViewModel.getMovie(movieList.get(i).getId()).observe(mContext, new Observer<Movie>() {
             @Override
@@ -93,17 +93,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView title, userratingText;
+        TextView title, userRatingText;
         ImageView thumbnail, favImageView;
         RatingBar rating;
 
         MyViewHolder(final View view) {
             super(view);
             title = view.findViewById(R.id.title);
-            rating = view.findViewById(R.id.userrating);
+            rating = view.findViewById(R.id.userRating);
             thumbnail = view.findViewById(R.id.thumbnail);
             favImageView = view.findViewById(R.id.imageViewFav);
-            userratingText = view.findViewById(R.id.userratingText);
+            userRatingText = view.findViewById(R.id.userRatingText);
 
 
             favImageView.setOnClickListener(new View.OnClickListener() {

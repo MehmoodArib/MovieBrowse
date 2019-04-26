@@ -3,7 +3,6 @@ package com.exe.mehmood.moviebrowse;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -11,33 +10,33 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.exe.mehmood.moviebrowse.adapter.TrailerAdapter;
-import com.exe.mehmood.moviebrowse.api.Service;
+import com.exe.mehmood.moviebrowse.data.ViewModels.DetailActivityViewModel;
 import com.exe.mehmood.moviebrowse.model.Movie;
+import com.exe.mehmood.moviebrowse.model.NetworkResponse;
 import com.exe.mehmood.moviebrowse.model.Trailer;
-import com.exe.mehmood.moviebrowse.model.TrailerResponse;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
-    TextView mNameOfMovieTextView, mPlotSynopsisTextView, mReleaseDate, mUserRatingText;
-    RatingBar mUserRatingBar;
-    ImageView mThumbNailImageView;
-    Movie movie;
-    String thumbnail, movieName, synopsis, dateOfRelease;
-    float rating;
-    int movie_id;
+    private TextView mNameOfMovieTextView, mPlotSynopsisTextView, mReleaseDate, mUserRatingText;
+    private RatingBar mUserRatingBar;
+    private ImageView mThumbNailImageView;
+    private Movie movie;
+    private String thumbnail, movieName, synopsis, dateOfRelease;
+    private float rating;
+    private int movie_id;
+    private DetailActivityViewModel detailActivityViewModel;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -47,16 +46,18 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         initCollapsingToolbar();
 
+        detailActivityViewModel = ViewModelProviders.of(this).get(DetailActivityViewModel.class);
+
         mThumbNailImageView = findViewById(R.id.thumbnail_image_header);
         mNameOfMovieTextView = findViewById(R.id.title);
-        mPlotSynopsisTextView = findViewById(R.id.plotsynopsis);
-        mUserRatingBar = findViewById(R.id.userrating);
-        mReleaseDate = findViewById(R.id.releasedate);
-        mUserRatingText = findViewById(R.id.userratingText);
+        mPlotSynopsisTextView = findViewById(R.id.plotSynopsis);
+        mUserRatingBar = findViewById(R.id.userRating);
+        mReleaseDate = findViewById(R.id.releaseDate);
+        mUserRatingText = findViewById(R.id.userRatingText);
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null)
@@ -132,40 +133,30 @@ public class DetailActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(trailerAdapter);
         trailerAdapter.notifyDataSetChanged();
 
-        loadJSON();
+        loadMovieTrailer(movie_id);
 
     }
 
     /**
      * * Load  Movie trailers By making an Api call to tmdb.org.
      */
-    private void loadJSON() {
+    void loadMovieTrailer(int movie_id) {
+        detailActivityViewModel.getMovieTrailer(movie_id).observe(this, new Observer<NetworkResponse<List<Trailer>>>() {
+            @Override
+            public void onChanged(NetworkResponse<List<Trailer>> listNetworkResponse) {
+                switch (listNetworkResponse.getStatus()) {
+                    case SUCCESS:
+                        mRecyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), listNetworkResponse.getData()));
+                        mRecyclerView.smoothScrollToPosition(0);
+                        break;
+                    case LOADING:
 
-        try {
-            Service apiService = com.exe.mehmood.moviebrowse.api.Client.getClient().create(Service.class);
-            Call<TrailerResponse> call = apiService.getMovieTrailer(movie_id, BuildConfig.THE_MOVIE_DB_API_TOKEN);
-            call.enqueue(new Callback<TrailerResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<TrailerResponse> call, @NonNull Response<TrailerResponse> response) {
-                    assert response.body() != null;
-                    List<Trailer> trailer = response.body().getResults();
-                    mRecyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), trailer));
-                    mRecyclerView.smoothScrollToPosition(0);
+                        break;
+                    case ERROR:
+
+                        break;
                 }
-
-                @Override
-                public void onFailure(@NonNull Call<TrailerResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    Toast.makeText(DetailActivity.this, "Error fetching trailer data", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-        } catch (Exception e) {
-            Log.d("Error", e.getMessage());
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
     }
-
-
 }

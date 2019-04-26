@@ -1,4 +1,4 @@
-package com.exe.mehmood.moviebrowse.data;
+package com.exe.mehmood.moviebrowse.data.favMovies;
 
 import com.exe.mehmood.moviebrowse.model.Movie;
 

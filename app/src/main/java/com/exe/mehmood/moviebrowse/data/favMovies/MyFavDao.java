@@ -1,4 +1,4 @@
-package com.exe.mehmood.moviebrowse.data;
+package com.exe.mehmood.moviebrowse.data.favMovies;
 
 import com.exe.mehmood.moviebrowse.model.Movie;
 
@@ -11,7 +11,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 /***
- * Room Dao to store favourite movies to local Datbase.
+ * Room Dao to store favourite movies to local Database.
  */
 @Dao
 public interface MyFavDao {

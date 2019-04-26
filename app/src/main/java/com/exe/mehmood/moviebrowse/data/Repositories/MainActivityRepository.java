@@ -1,16 +1,16 @@
-package com.exe.mehmood.moviebrowse.data;
+package com.exe.mehmood.moviebrowse.data.Repositories;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.exe.mehmood.moviebrowse.BuildConfig;
-import com.exe.mehmood.moviebrowse.MainActivity;
 import com.exe.mehmood.moviebrowse.api.Client;
 import com.exe.mehmood.moviebrowse.api.Service;
+import com.exe.mehmood.moviebrowse.data.favMovies.FavDataBase;
 import com.exe.mehmood.moviebrowse.model.Movie;
 import com.exe.mehmood.moviebrowse.model.MoviesResponse;
+import com.exe.mehmood.moviebrowse.model.NetworkResponse;
 
 import java.util.List;
 
@@ -25,13 +25,14 @@ import retrofit2.Response;
 /***
  * Repository Containing All methods of local database and Api.
  */
-class MainActivityRepository {
-    private String DB_NAME = "db_task";
+public class MainActivityRepository {
     private LiveData<List<Movie>> movies;
 
 
     private FavDataBase favDataBase;
-    MainActivityRepository(Context context) {
+
+    public MainActivityRepository(Context context) {
+        String DB_NAME = "db_task";
         favDataBase = Room.databaseBuilder(context, FavDataBase.class, DB_NAME).build();
         movies = favDataBase.myFavDao().fetchAllFavMovie();
     }
@@ -56,13 +57,10 @@ class MainActivityRepository {
 
                 @Override
                 public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    //Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     upcomingMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Error fetching data from server"));
                 }
             });
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
             upcomingMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Unable to make a network request!"));
         }
         return upcomingMovies;
@@ -77,7 +75,7 @@ class MainActivityRepository {
         try {
             Service apiService =
                     Client.getClient().create(Service.class);
-            Call<MoviesResponse> call = apiService.getUpComingMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+            Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
@@ -87,13 +85,10 @@ class MainActivityRepository {
 
                 @Override
                 public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    //Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     popularMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Error fetching data from server"));
                 }
             });
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
             popularMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Unable to make a network request!"));
         }
         return popularMovies;
@@ -115,13 +110,10 @@ class MainActivityRepository {
 
                 @Override
                 public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    //Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     searchResult.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Error fetching data from server"));
                 }
             });
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
             searchResult.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Unable to make a network request!"));
         }
         return searchResult;
@@ -146,13 +138,10 @@ class MainActivityRepository {
 
                 @Override
                 public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    //Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     topRatedMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Error fetching data from server"));
                 }
             });
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
             topRatedMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Unable to make a network request!"));
         }
         return topRatedMovies;
@@ -177,24 +166,21 @@ class MainActivityRepository {
 
                 @Override
                 public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    //Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     nowPlayingMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Error fetching data from server"));
                 }
             });
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
             nowPlayingMovies.setValue(new NetworkResponse<List<Movie>>(NetworkResponse.Status.ERROR, null, "Unable to make a network request!"));
         }
         return nowPlayingMovies;
     }
 
-    void insertMovie(Movie movie) {
+    public void insertMovie(Movie movie) {
 
         insertMovieAsyncTask(movie);
     }
 
-    void deleteMovie(Movie movie) {
+    public void deleteMovie(Movie movie) {
 
         deleteMovieAsyncTask(movie);
     }
@@ -221,11 +207,11 @@ class MainActivityRepository {
         }.execute();
     }
 
-    LiveData<Movie> getMovie(int id) {
+    public LiveData<Movie> getMovie(int id) {
         return favDataBase.myFavDao().getMovie(id);
     }
 
-    LiveData<List<Movie>> getMovies() {
+    public LiveData<List<Movie>> getMovies() {
         return movies;
     }
 }

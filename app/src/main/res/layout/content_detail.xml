@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+        android:layout_width="match_parent"
+    android:id="@+id/ad"
     android:layout_height="match_parent"
-    android:background="@color/viewBg"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.exe.mehmood.moviebrowse.DetailActivity"
     tools:showIn="@layout/activity_detail">
-
-    <LinearLayout
-        android:id="@+id/ad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -42,64 +37,64 @@
 
 
                 <TextView
-                    android:id="@+id/userratingTextView"
+                    android:id="@+id/userRatingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/title"
                     android:text="@string/rating" />
 
                 <RatingBar
-                    android:id="@+id/userrating"
+                    android:id="@+id/userRating"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/userratingTextView"
+                    android:layout_below="@+id/userRatingTextView"
                     android:isIndicator="true"
                     android:numStars="5"
                     android:textColor="@color/colorAccent"/>
 
                 <TextView
-                    android:id="@+id/userratingText"
+                    android:id="@+id/userRatingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/userratingTextView"
-                    android:layout_toEndOf="@+id/userrating"
+                    android:layout_below="@+id/userRatingTextView"
+                    android:layout_toEndOf="@+id/userRating"
                     android:textColor="@color/colorAccent" />
 
                 <TextView
-                    android:id="@+id/releasedateTextView"
+                    android:id="@+id/releaseDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/userratingText"
+                    android:layout_below="@+id/userRatingText"
                     android:text="@string/release_date" />
 
                 <TextView
-                    android:id="@+id/releasedate"
+                    android:id="@+id/releaseDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/releasedateTextView"
+                    android:layout_below="@+id/releaseDateTextView"
                     android:textColor="@color/colorAccent" />
 
                 <TextView
-                    android:id="@+id/plotsynopsisTextView"
+                    android:id="@+id/plotSynopsisTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/releasedate"
+                    android:layout_below="@+id/releaseDate"
                     android:text="@string/plot_synopsis" />
 
                 <TextView
-                    android:id="@+id/plotsynopsis"
+                    android:id="@+id/plotSynopsis"
                     android:textSize="15sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/plotsynopsisTextView"
+                    android:layout_below="@+id/plotSynopsisTextView"
                     android:textColor="@color/colorAccent" />
 
                 <TextView
                     android:id="@+id/trailer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/plotsynopsis"
+                    android:layout_below="@+id/plotSynopsis"
                     android:text="@string/trailer" />
 
 
@@ -117,5 +112,3 @@
         </ScrollView>
 
     </LinearLayout>
-
-</RelativeLayout>

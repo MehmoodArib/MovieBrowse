@@ -19,7 +19,7 @@
         android:paddingBottom="8dp">
 
         <ImageView
-            android:contentDescription="ThumbNail"
+            android:contentDescription="@string/thumbnail"
             android:id="@+id/thumbnail"
             android:layout_width="250dp"
             android:layout_height="250dp"
@@ -48,7 +48,7 @@
 
 
         <RatingBar
-            android:id="@+id/userrating"
+            android:id="@+id/userRating"
             style="@style/Base.Widget.AppCompat.RatingBar.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,16 +62,16 @@
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <TextView
-            android:id="@+id/userratingText"
+            android:id="@+id/userRatingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="2.5"
+            android:text="@string/_2_5"
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/userrating"
-            app:layout_constraintStart_toEndOf="@+id/userrating"
-            app:layout_constraintTop_toTopOf="@+id/userrating" />
+            app:layout_constraintBottom_toBottomOf="@+id/userRating"
+            app:layout_constraintStart_toEndOf="@+id/userRating"
+            app:layout_constraintTop_toTopOf="@+id/userRating" />
 
 
         <ImageView
@@ -81,10 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_fav"
-            app:layout_constraintBottom_toBottomOf="@id/userrating"
+            app:layout_constraintBottom_toBottomOf="@id/userRating"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/userratingText"
-            app:layout_constraintTop_toTopOf="@id/userrating" />
+            app:layout_constraintLeft_toRightOf="@id/userRatingText"
+            app:layout_constraintTop_toTopOf="@id/userRating" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl80"

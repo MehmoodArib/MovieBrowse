@@ -3,9 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:adjustViewBounds="true"
-    android:background="@color/viewBg">
-
+    android:adjustViewBounds="true">
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -27,7 +25,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:src="@drawable/youtube" />
+                android:src="@drawable/youtube"
+                android:contentDescription="@string/thumbnail" />
 
             <TextView
                 android:id="@+id/title"

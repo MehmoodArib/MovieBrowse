@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /***
- * Retrofit Interface Containing methods which are called by Api's.
+ * Retrofit Interface Containing methods which are called by Api.
  */
 
 public interface Service {

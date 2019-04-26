@@ -1,10 +1,10 @@
-package com.exe.mehmood.moviebrowse.data;
+package com.exe.mehmood.moviebrowse.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /***A generic class that contains data and status about loading this data.
- * Used with Api's
+ * Used with Api
  * @param <T> DataType returned by server on Api call.
  */
 
@@ -16,8 +16,8 @@ public class NetworkResponse<T> {
     @Nullable
     private final String message;
 
-    NetworkResponse(@NonNull Status status, @Nullable T data,
-                    @Nullable String message) {
+    public NetworkResponse(@NonNull Status status, @Nullable T data,
+                           @Nullable String message) {
         this.status = status;
         this.data = data;
         this.message = message;

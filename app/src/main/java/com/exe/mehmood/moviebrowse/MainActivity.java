@@ -9,9 +9,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.exe.mehmood.moviebrowse.adapter.MoviesAdapter;
-import com.exe.mehmood.moviebrowse.data.MainActivityViewModel;
-import com.exe.mehmood.moviebrowse.data.NetworkResponse;
+import com.exe.mehmood.moviebrowse.data.ViewModels.MainActivityViewModel;
 import com.exe.mehmood.moviebrowse.model.Movie;
+import com.exe.mehmood.moviebrowse.model.NetworkResponse;
 
 import java.util.List;
 

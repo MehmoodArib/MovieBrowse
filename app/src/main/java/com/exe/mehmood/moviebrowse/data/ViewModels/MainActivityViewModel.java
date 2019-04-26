@@ -1,9 +1,10 @@
-package com.exe.mehmood.moviebrowse.data;
+package com.exe.mehmood.moviebrowse.data.ViewModels;
 
 import android.app.Application;
 
-import com.exe.mehmood.moviebrowse.MainActivity;
+import com.exe.mehmood.moviebrowse.data.Repositories.MainActivityRepository;
 import com.exe.mehmood.moviebrowse.model.Movie;
+import com.exe.mehmood.moviebrowse.model.NetworkResponse;
 
 import java.util.List;
 
